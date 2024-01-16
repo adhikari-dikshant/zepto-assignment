@@ -20,7 +20,7 @@ const ChipComponent = () => {
 		setInputValue(event.target.value);
 	};
 
-	const handleInputKey = (event) => {
+	const handleInput = (event) => {
 		if (event.key === 'Enter' && inputValue) {
 			event.preventDefault();
 			const filteredItems = items.filter((item) =>
@@ -55,32 +55,35 @@ const ChipComponent = () => {
 	};
 
 	return (
-		<div className="body">
-			<div className="chip-component">
-				<div className="chips">
-					{chips.map((chip, index) => (
-						<div key={index} className="chip">
-							{chip}
-							<button onClick={() => handleDeleteChip(chip)}>X</button>
-						</div>
-					))}
+		<>
+			<h1 className="texthere">Click on the options or simply type name and press enter.</h1>
+			<h3 className="texthere">only up and down navigation doesn't work</h3>
+			<div className="body">
+				<div className="chip-component">
+					<div className="chips">
+						{chips.map((chip, index) => (
+							<div key={index} className="chip">
+								{chip}
+								<button onClick={() => handleDeleteChip(chip)}>X</button>
+							</div>
+						))}
+					</div>
+					<input
+						type="text"
+						value={inputValue}
+						onChange={handleInputChange}
+						onKeyDown={handleInput}
+						onFocus={() => setItems([...items])} />
+					<ul className="suggestions">
+						{items.filter((item) => item.toLowerCase().includes(inputValue.toLowerCase())).map((filteredItem, index) => (
+							<li key={index} onClick={() => handleItemClick(filteredItem)}>
+								{filteredItem}
+							</li>
+						))}
+					</ul>
 				</div>
-				<input
-					type="text"
-					value={inputValue}
-					onChange={handleInputChange}
-					onKeyDown={handleInputKey}
-					onFocus={() => setItems([...items])}
-				/>
-				<ul className="suggestions">
-					{items.filter((item) => item.toLowerCase().includes(inputValue.toLowerCase())).map((filteredItem, index) => (
-						<li key={index} onClick={() => handleItemClick(filteredItem)}>
-							{filteredItem}
-						</li>
-					))}
-				</ul>
 			</div>
-		</div>
+		</>
 	);
 };
 
