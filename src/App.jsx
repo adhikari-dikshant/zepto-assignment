@@ -20,16 +20,12 @@ const ChipComponent = () => {
 		setInputValue(event.target.value);
 	};
 
-	const handleInputKeyDown = (event) => {
+	const handleInputKey = (event) => {
 		if (event.key === 'Enter' && inputValue) {
-			event.preventDefault(); // Prevent the default form submit behavior
-
-			// Filter the items list based on the input value
+			event.preventDefault();
 			const filteredItems = items.filter((item) =>
 				item.toLowerCase().startsWith(inputValue.toLowerCase())
 			);
-
-			// If there's at least one match, add the first one to the chips
 			if (filteredItems.length > 0) {
 				const matchedItem = filteredItems[0];
 				setChips([...chips, matchedItem]);
@@ -37,8 +33,13 @@ const ChipComponent = () => {
 				setInputValue('');
 			}
 		} else if (event.key === 'Backspace' && !inputValue && chips.length) {
-			// Handle backspace key press when input is empty
 			setIsBackspacePressed(true);
+		} else if (event.key === 'ArrowDown' && items.length > 0) {
+			event.preventDefault();
+			setFocusedIndex((prevIndex) => (prevIndex === null ? 0 : (prevIndex + 1) % items.length));
+		} else if (event.key === 'ArrowUp' && items.length > 0) {
+			event.preventDefault();
+			setFocusedIndex((prevIndex) => (prevIndex === null ? items.length - 1 : (prevIndex - 1 + items.length) % items.length));
 		}
 	};
 
@@ -68,7 +69,7 @@ const ChipComponent = () => {
 					type="text"
 					value={inputValue}
 					onChange={handleInputChange}
-					onKeyDown={handleInputKeyDown}
+					onKeyDown={handleInputKey}
 					onFocus={() => setItems([...items])}
 				/>
 				<ul className="suggestions">
